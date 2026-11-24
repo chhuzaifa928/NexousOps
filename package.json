@@ -8,7 +8,7 @@
     "services/orders-service"
   ],
   "scripts": {
-    "postinstall": "npm run setup:python",
+    "postinstall": "node -e \"if (!process.env.VERCEL) require('child_process').execSync('npm run setup:python', { stdio: 'inherit' })\"",
     "setup:python": "python -m pip install -r services/warehouse-support-service/requirements.txt",
     "dev": "concurrently -k -n orders,warehouse,frontend -c blue,green,white \"npm run dev:orders\" \"npm run dev:warehouse\" \"npm run dev:frontend\"",
     "dev:orders": "npm --prefix services/orders-service run dev",
