@@ -1,0 +1,31 @@
+{
+  "name": "nexusops",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NexusOps polyglot cross-system enterprise AI copilot monorepo",
+  "workspaces": [
+    "frontend",
+    "services/orders-service"
+  ],
+  "scripts": {
+    "postinstall": "npm run setup:python",
+    "setup:python": "python -m pip install -r services/warehouse-support-service/requirements.txt",
+    "dev": "concurrently -k -n orders,warehouse,frontend -c blue,green,white \"npm run dev:orders\" \"npm run dev:warehouse\" \"npm run dev:frontend\"",
+    "dev:orders": "npm --prefix services/orders-service run dev",
+    "dev:warehouse": "python -m uvicorn app.main:app --app-dir services/warehouse-support-service --reload --host 0.0.0.0 --port 4002",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "typecheck": "npm run typecheck --workspace @nexusops/orders-service && npm run typecheck --workspace @nexusops/frontend",
+    "lint": "npm run lint --workspace @nexusops/frontend",
+    "build": "npm run build --workspace @nexusops/frontend",
+    "setup:synapse": "bash scripts/setup-synapse.sh",
+    "live:discover": "bash scripts/live-discover-demo.sh"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "next": "^14.2.25"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "python": ">=3.11.0"
+  }
+}

@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --canvas: #fbfbf9;
+  --surface: #ffffff;
+  --limestone: #f4f4f0;
+  --hairline: #e5e7eb;
+  --ink: #0f172a;
+  --muted: #475569;
+  --cobalt: #1d4ed8;
+  --synapse: #0f766e;
+  --success: #15803d;
+  --warning: #b45309;
+  --critical: #b91c1c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.numeric,
+table td,
+table th {
+  font-variant-numeric: tabular-nums;
+}
+
+.mono {
+  font-family: var(--font-jetbrains-mono), SFMono-Regular, Consolas, "Liberation Mono", monospace;
+}
+
+.hairline-card {
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+  border-radius: 12px;
+}
+
+.limestone-header {
+  background: var(--limestone);
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--cobalt);
+  outline-offset: 2px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--limestone);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border: 2px solid var(--limestone);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+.app-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.sidebar-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.hero-surface {
+  background:
+    radial-gradient(circle at 88% 12%, rgba(29, 78, 216, 0.42), transparent 34%),
+    radial-gradient(circle at 68% 100%, rgba(15, 118, 110, 0.32), transparent 40%),
+    #0f172a;
+}
+
+.soft-grid {
+  background-image:
+    linear-gradient(to right, rgba(229, 231, 235, 0.6) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(229, 231, 235, 0.6) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.hero-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
+  background-size: 32px 32px;
+}

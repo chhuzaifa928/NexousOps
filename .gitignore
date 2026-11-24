@@ -1,0 +1,17 @@
+node_modules/
+frontend/.next/
+frontend/out/
+frontend/tsconfig.tsbuildinfo
+dist/
+build/
+*.tsbuildinfo
+*.log
+.env
+.env.*
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
