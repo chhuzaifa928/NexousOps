@@ -33,7 +33,7 @@ export default function SystemTopology({ discovered, status }: SystemTopologyPro
             icon={Boxes}
             title="System A"
             subtitle="TypeScript · Express"
-            detail=":4001 · orders.sqlite"
+            detail="Express · orders.sqlite"
             tone="cobalt"
             online={status?.orders.state === "online"}
           />

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "frontend": {
+      "root": "frontend",
+      "framework": "nextjs",
+      "bindings": [
+        {
+          "type": "service",
+          "service": "orders-service",
+          "format": "url",
+          "env": "ORDERS_SERVICE_URL"
+        },
+        {
+          "type": "service",
+          "service": "warehouse-support-service",
+          "format": "url",
+          "env": "WAREHOUSE_SERVICE_URL"
+        }
+      ]
+    },
+    "orders-service": {
+      "root": "services/orders-service",
+      "framework": "express",
+      "entrypoint": "src/index.ts"
+    },
+    "warehouse-support-service": {
+      "root": "services/warehouse-support-service",
+      "framework": "fastapi",
+      "entrypoint": "app.main:app"
+    }
+  },
+  "rewrites": [
+    { "source": "/(.*)", "destination": { "service": "frontend" } }
+  ]
+}

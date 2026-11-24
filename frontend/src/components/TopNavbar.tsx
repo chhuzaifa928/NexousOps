@@ -41,10 +41,10 @@ export default function TopNavbar({
     return {
       id: serverKey === "orders" ? "orders-mcp" : "warehouse-support-mcp",
       transport: {
-        transport: "stdio",
-        runner: "npx",
-        package: "@2ndbrainlabs-ai/synapse-cli",
-        baseUrl: serverKey === "orders" ? "http://127.0.0.1:4001" : "http://127.0.0.1:4002",
+        transport: "internal service binding",
+        caller: "frontend",
+        service: serverKey === "orders" ? "orders-service" : "warehouse-support-service",
+        env: serverKey === "orders" ? "ORDERS_SERVICE_URL" : "WAREHOUSE_SERVICE_URL",
       },
       latency: server?.latencyMs ?? null,
       tools,

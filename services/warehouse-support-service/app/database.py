@@ -13,12 +13,17 @@ from __future__ import annotations
 
 import os
 import sqlite3
+import tempfile
 from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterator
 
-DEFAULT_DB_PATH = Path(__file__).resolve().parent.parent / "data" / "warehouse.sqlite"
+DEFAULT_DB_PATH = (
+    Path(tempfile.gettempdir()) / "nexusops-warehouse.sqlite"
+    if os.environ.get("VERCEL") == "1"
+    else Path(__file__).resolve().parent.parent / "data" / "warehouse.sqlite"
+)
 
 INVENTORY_COLUMNS = (
     "sku",

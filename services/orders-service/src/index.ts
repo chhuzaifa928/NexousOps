@@ -23,30 +23,34 @@ app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {
   res.status(500).json({ error: "INTERNAL_ERROR", message });
 });
 
-const parsedPort = Number(process.env.PORT);
-const port = Number.isInteger(parsedPort) && parsedPort > 0 ? parsedPort : 4001;
+if (process.env.VERCEL !== "1") {
+  const parsedPort = Number(process.env.PORT);
+  const port = Number.isInteger(parsedPort) && parsedPort > 0 ? parsedPort : 4001;
 
-const server = app.listen(port, () => {
-  console.log(`orders-service listening on port ${port}`);
-});
-
-let shuttingDown = false;
-
-function shutdown(): void {
-  if (shuttingDown) {
-    return;
-  }
-
-  shuttingDown = true;
-  server.close(() => {
-    db.close();
-    process.exit(0);
+  const server = app.listen(port, () => {
+    console.log(`orders-service listening on port ${port}`);
   });
 
-  setTimeout(() => {
-    process.exit(1);
-  }, 5000).unref();
+  let shuttingDown = false;
+
+  function shutdown(): void {
+    if (shuttingDown) {
+      return;
+    }
+
+    shuttingDown = true;
+    server.close(() => {
+      db.close();
+      process.exit(0);
+    });
+
+    setTimeout(() => {
+      process.exit(1);
+    }, 5000).unref();
+  }
+
+  process.on("SIGINT", shutdown);
+  process.on("SIGTERM", shutdown);
 }
 
-process.on("SIGINT", shutdown);
-process.on("SIGTERM", shutdown);
+export default app;

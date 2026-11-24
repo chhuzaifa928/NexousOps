@@ -12,11 +12,18 @@ export interface BackendResult<T> {
   latencyMs: number;
 }
 
-const ORDERS_BASE_URL = process.env.ORDERS_SERVICE_URL ?? "http://127.0.0.1:4001";
-const WAREHOUSE_BASE_URL = process.env.WAREHOUSE_SERVICE_URL ?? "http://127.0.0.1:4002";
+function serviceUrl(service: "orders" | "warehouse"): string {
+  const configured =
+    service === "orders"
+      ? process.env.ORDERS_SERVICE_URL
+      : process.env.WAREHOUSE_SERVICE_URL;
+  const fallback =
+    service === "orders" ? "http://127.0.0.1:4001" : "http://127.0.0.1:4002";
+  return (configured || fallback).replace(/\/$/, "");
+}
 
 export function getServiceUrls() {
-  return { orders: ORDERS_BASE_URL, warehouse: WAREHOUSE_BASE_URL };
+  return { orders: serviceUrl("orders"), warehouse: serviceUrl("warehouse") };
 }
 
 export async function backendFetch<T>(
@@ -110,57 +117,57 @@ export interface WarehouseDatabaseTables {
   support_tickets: Record<string, unknown>[];
 }
 
-export const getOrders = () => backendFetch<OrdersEnvelope>(ORDERS_BASE_URL, "/api/orders");
+export const getOrders = () => backendFetch<OrdersEnvelope>(getServiceUrls().orders, "/api/orders");
 export const getDelayedOrders = () =>
-  backendFetch<OrdersEnvelope>(ORDERS_BASE_URL, "/api/orders/delayed");
+  backendFetch<OrdersEnvelope>(getServiceUrls().orders, "/api/orders/delayed");
 export const getCodFraudRisk = () =>
   backendFetch<{
     orders: Array<OrderRecord & { risk_score: number; risk_level: string; risk_reasons: string[] }>;
     threshold: { codRejectionRate: number; minimumOrderValue: number };
     count: number;
-  }>(ORDERS_BASE_URL, "/api/orders/cod-fraud-risk");
+  }>(getServiceUrls().orders, "/api/orders/cod-fraud-risk");
 export const getCustomerProfile = (customerId: string) =>
   backendFetch<{ profile: Record<string, unknown> }>(
-    ORDERS_BASE_URL,
+    getServiceUrls().orders,
     `/api/customers/${encodeURIComponent(customerId)}/profile`,
   );
 export const flagOrderPriority = (orderId: string) =>
   backendFetch<{ order: OrderRecord; message: string }>(
-    ORDERS_BASE_URL,
+    getServiceUrls().orders,
     `/api/orders/${encodeURIComponent(orderId)}/priority-flag`,
     { method: "POST" },
   );
 export const getOrdersDatabase = () =>
-  backendFetch<DatabaseEnvelope<OrdersDatabaseTables>>(ORDERS_BASE_URL, "/api/database");
+  backendFetch<DatabaseEnvelope<OrdersDatabaseTables>>(getServiceUrls().orders, "/api/database");
 
 export const getLowStock = () =>
-  backendFetch<LowStockEnvelope>(WAREHOUSE_BASE_URL, "/api/inventory/low-stock");
+  backendFetch<LowStockEnvelope>(getServiceUrls().warehouse, "/api/inventory/low-stock");
 export const getSkuStock = (sku: string) =>
   backendFetch<SkuEnvelope>(
-    WAREHOUSE_BASE_URL,
+    getServiceUrls().warehouse,
     `/api/inventory/sku/${encodeURIComponent(sku)}`,
   );
 export const createRestockOrder = (body: Record<string, unknown>) =>
   backendFetch<{ order: Record<string, unknown>; message: string }>(
-    WAREHOUSE_BASE_URL,
+    getServiceUrls().warehouse,
     "/api/inventory/restock-order",
     { method: "POST", body: JSON.stringify(body) },
   );
 export const getOpenTickets = () =>
-  backendFetch<TicketsEnvelope>(WAREHOUSE_BASE_URL, "/api/tickets/open");
+  backendFetch<TicketsEnvelope>(getServiceUrls().warehouse, "/api/tickets/open");
 export const escalateTicket = (ticketId: string, body: Record<string, unknown>) =>
   backendFetch<{ ticket: Record<string, unknown>; message: string }>(
-    WAREHOUSE_BASE_URL,
+    getServiceUrls().warehouse,
     `/api/tickets/${encodeURIComponent(ticketId)}/escalate`,
     { method: "POST", body: JSON.stringify(body) },
   );
 export const getWarehouseDatabase = () =>
-  backendFetch<DatabaseEnvelope<WarehouseDatabaseTables>>(WAREHOUSE_BASE_URL, "/api/database");
+  backendFetch<DatabaseEnvelope<WarehouseDatabaseTables>>(getServiceUrls().warehouse, "/api/database");
 
 export const getOrdersHealth = () =>
-  backendFetch<HealthEnvelope>(ORDERS_BASE_URL, "/api/health");
+  backendFetch<HealthEnvelope>(getServiceUrls().orders, "/api/health");
 export const getWarehouseHealth = () =>
-  backendFetch<HealthEnvelope>(WAREHOUSE_BASE_URL, "/api/health");
+  backendFetch<HealthEnvelope>(getServiceUrls().warehouse, "/api/health");
 
 export function inventoryFromRawRows(rows: Record<string, unknown>[]): InventoryRecord[] {
   return rows.map((row) => {

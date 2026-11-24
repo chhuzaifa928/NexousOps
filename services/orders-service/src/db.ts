@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import Database from "better-sqlite3";
@@ -39,13 +40,17 @@ export const FRAUD_MINIMUM_ORDER_VALUE = 400;
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 const serviceRoot = path.resolve(currentDirectory, "..");
 const configuredDatabasePath = process.env.ORDERS_DB_PATH;
+const defaultDatabasePath =
+  process.env.VERCEL === "1"
+    ? path.join(os.tmpdir(), "nexusops-orders.sqlite")
+    : path.join(serviceRoot, "data", "orders.sqlite");
 
 export const databasePath =
   configuredDatabasePath && configuredDatabasePath !== ":memory:"
     ? path.isAbsolute(configuredDatabasePath)
       ? configuredDatabasePath
       : path.resolve(serviceRoot, configuredDatabasePath)
-    : configuredDatabasePath ?? path.join(serviceRoot, "data", "orders.sqlite");
+    : configuredDatabasePath ?? defaultDatabasePath;
 
 fs.mkdirSync(path.dirname(databasePath), { recursive: true });
 

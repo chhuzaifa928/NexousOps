@@ -106,7 +106,7 @@ export default function ServiceInspector({
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-hairline p-3">
             <div>
               <p className="text-xs font-bold text-ink">orders.sqlite</p>
-              <p className="mono text-[10px] text-muted">System A · TypeScript · :4001</p>
+              <p className="mono text-[10px] text-muted">System A · TypeScript · Express</p>
             </div>
             <div className="flex rounded-md border border-hairline bg-limestone p-0.5">
               {(["orders", "customers"] as const).map((table) => (
@@ -137,7 +137,7 @@ export default function ServiceInspector({
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-hairline p-3">
             <div>
               <p className="text-xs font-bold text-ink">warehouse.sqlite</p>
-              <p className="mono text-[10px] text-muted">System B · Python · :4002</p>
+              <p className="mono text-[10px] text-muted">System B · Python · FastAPI</p>
             </div>
             <div className="flex rounded-md border border-hairline bg-limestone p-0.5">
               {(["inventory", "support_tickets"] as const).map((table) => (
